@@ -77,7 +77,7 @@ def gerar_horda(status,game_started):
        
         status = "preparing"
         global quantia_montro 
-        quantia_montro = randint(1,10)
+        quantia_montro = randint(1,1)
         while quantia_montro > 0:
             monterst = gerar_monstro()
             npc.append(monterst)
@@ -118,11 +118,46 @@ def numerar_inimigos(status, ordemataque):
                 inimigos.append(cabacice)
         atacar(status, inimigos, ordemataque)
 
-def player_cura():
-    pass
+def player_cura(ordemdeataque,inimigos):
+    if player[0].curou_nesta_rodada :
+        print(f"\nVocê já se curou nessa rodada!")
+        ask = "atacar"
 
-def player_ataque():
-    pass
+    elif player[0].hp >= player[0].hpmax :
+        print(f"\nVida ja está no maximo!")
+        ordemdeataque.append(ordemdeataque.pop(0))
+
+
+    else:
+        qtd_curadap = cura(player[0])
+        print(f"\nVocê [red]curou {qtd_curadap} parabêns!")
+        player[0].curou_nesta_rodada = True
+        ordemdeataque.append(ordemdeataque.pop(0))
+    return None, 0
+
+
+def player_ataque(ordemdeataque,inimigos):
+        print(f"\nLista de quem atacar!\n")
+        contador = 1
+        for cabacice in inimigos:
+            if isinstance (cabacice,nStatus):
+                print(f"{contador} - {cabacice.name}(HP:{cabacice.hp})\n")
+                contador += 1
+        time.sleep(0.5)
+        alvo_escolha = int(input(f"Escolha quem atacar! digite o numero correspondente.\n")) - 1
+
+        while alvo_escolha  >= len(inimigos) or alvo_escolha  < 0:
+            print("Digite um numero valido por favor!\n")
+            alvo_escolha  = int(input(f"Escolha quem atacar! digite o numero correspondente.\n")) - 1
+
+
+        alvo = inimigos[alvo_escolha ]
+        dano = ataque_player(player[0],alvo)
+        alvo.hp -= dano
+        player[0].curou_nesta_rodada = False
+
+        return alvo, dano 
+
 def turno_montro(ordemdeataque):
     turno = ordemdeataque[0]
     custa_esquiva = 15
@@ -159,46 +194,23 @@ def turno_montro(ordemdeataque):
     
 def turno_player(ordemdeataque,inimigos):
     ordemdeataque[0]
-    ask = validar(("\nO que gostaria de fazer?\n [red]Cura[/] [blue]atacar[/]"), ["cura", "atacar"])
-        
-    if ask == "cura":
-        if player[0].curou_nesta_rodada :
-            print(f"\nVocê já se curou nessa rodada!")
-            ask = "atacar"
+    ask = input(f"\nO que gostaria de fazer?\n [red]Cura[/] [blue]atacar[/]").lower
 
-        elif player[0].hp >= player[0].hpmax :
-            print(f"\nVida ja está no maximo!")
-            ordemdeataque.append(ordemdeataque.pop(0))
+    funcao_escolhida = None
 
+    for chave in acoes.keys:
+        if chave.startwith(ask):
+            funcao_escolhida = acoes(chave)
+            break
+    
 
-        else:
-            qtd_curadap = cura(player[0])
-            print(f"\nVocê [red]curou {qtd_curadap} parabêns!")
-            player[0].curou_nesta_rodada = True
-            ordemdeataque.append(ordemdeataque.pop(0))
+    if funcao_escolhida:
+        alvo, dano = funcao_escolhida(ordemdeataque,inimigos)
+        return alvo, dano
+    else:
+        print(f"Função não localizada!")
+        return None, 0 
 
-
-    elif ask == "atacar":
-        print(f"\nLista de quem atacar!\n")
-        contador = 1
-        for cabacice in inimigos:
-            if isinstance (cabacice,nStatus):
-                print(f"{contador} - {cabacice.name}(HP:{cabacice.hp})\n")
-                contador += 1
-        time.sleep(0.5)
-        alvo_escolha = int(input(f"Escolha quem atacar! digite o numero correspondente.\n")) - 1
-
-        while alvo_escolha  >= len(inimigos) or alvo_escolha  < 0:
-            print("Digite um numero valido por favor!\n")
-            alvo_escolha  = int(input(f"Escolha quem atacar! digite o numero correspondente.\n")) - 1
-
-
-        alvo = inimigos[alvo_escolha ]
-        dano = ataque_player(player[0],alvo)
-        alvo.hp -= dano
-        player[0].curou_nesta_rodada = False
-
-    return alvo, dano    
 
 def atacar(status, inimigos, ordemdeataque):
     if status == "ready" or status == "combate":
@@ -252,9 +264,10 @@ def atacar(status, inimigos, ordemdeataque):
 
 
 acoes = {
-        "atacar": atacar,
-        "curar" : player_cura
-    }
+    "atacar": player_ataque,
+    "cura" : player_cura
+}
+
 
 
 start()
