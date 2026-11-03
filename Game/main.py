@@ -10,6 +10,9 @@ install()
 player = []
 npc = []
 
+acoes = {
+        "atacar": atacar
+    }
 
 def validar(pergunta, lista):
     print(f"{pergunta}")
@@ -54,6 +57,8 @@ def start():
         print("feito")
 
 def novo_jogo():
+    player.clear()
+    npc.clear()
     listvalidar = ["sim", "não"]
     ask = validar(f"Gostaria de começar um novo jogo? Sim ou não?\n",listvalidar)
     if ask == "não":
@@ -75,7 +80,7 @@ def gerar_horda(status,game_started):
        
         status = "preparing"
         global quantia_montro 
-        quantia_montro = randint(1,7)
+        quantia_montro = randint(1,10)
         while quantia_montro > 0:
             monterst = gerar_monstro()
             npc.append(monterst)
@@ -115,7 +120,89 @@ def numerar_inimigos(status, ordemataque):
                 contador += 1
                 inimigos.append(cabacice)
         atacar(status, inimigos, ordemataque)
+
+def player_cura():
+    pass
+
+def player_ataque():
+    pass
+def turno_montro(ordemdeataque):
+    turno = ordemdeataque[0]
+    custa_esquiva = 15
+    if player[0].stamina >= custa_esquiva:
+        lista_esquiva_valida = ["sim","nao","não","esquivar","esquiva","s","e","n","d","desviar"]
+        ask_esquiva = validar(f"\nO {turno.name} irá te atacar! gostaria de [blue]desviar?[/]", lista_esquiva_valida )
+
+        if ask_esquiva.startswith(("s","e","d")) :
+            if player[0].stamina < custa_esquiva:
+                print(f"\nestamina necessaria: {custa_esquiva} estamina disponivel: {player[0].stamina}")
+            else:
+                player[0].stamina -= custa_esquiva
+                print(f"Você gastou [blue]15 de estamina [/]e esta com [blue]{player[0].stamina}")  
+
+                if player[0].stamina < 0:
+                    player[0].stamina = 0 
+                return
+
+    dano = npc_ataque(turno,player[0])
+
+    if player[0].stamina < custa_esquiva :
+        print(f"estamina abaixo de 15! [red bold]esquiva indisponivel dano aumentado.[/]")
+        ask_esquiva = "nao"
+        dano = int(dano * 1.80)
+
+             
+    if  ask_esquiva == "não" or ask_esquiva == "nao":
+
+        print(f"\nO monstro {turno.name} ira te atacar com: {dano} de dano \n"
+                "Agora você tem\n")
+            
+        player[0].hp -= dano
+        time.sleep(1.5)
+    
+def turno_player(ordemdeataque,inimigos):
+    ordemdeataque[0]
+    ask = validar(("\nO que gostaria de fazer?\n [red]Cura[/] [blue]atacar[/]"), ["cura", "atacar"])
         
+    if ask == "cura":
+        if player[0].curou_nesta_rodada :
+            print(f"\nVocê já se curou nessa rodada!")
+            ask = "atacar"
+
+        elif player[0].hp >= player[0].hpmax :
+            print(f"\nVida ja está no maximo!")
+            ordemdeataque.append(ordemdeataque.pop(0))
+
+
+        else:
+            qtd_curadap = cura(player[0])
+            print(f"\nVocê [red]curou {qtd_curadap} parabêns!")
+            player[0].curou_nesta_rodada = True
+            ordemdeataque.append(ordemdeataque.pop(0))
+
+
+    elif ask == "atacar":
+        print(f"\nLista de quem atacar!\n")
+        contador = 1
+        for cabacice in inimigos:
+            if isinstance (cabacice,nStatus):
+                print(f"{contador} - {cabacice.name}(HP:{cabacice.hp})\n")
+                contador += 1
+        time.sleep(0.5)
+        alvo_escolha = int(input(f"Escolha quem atacar! digite o numero correspondente.\n")) - 1
+
+        while alvo_escolha  >= len(inimigos) or alvo_escolha  < 0:
+            print("Digite um numero valido por favor!\n")
+            alvo_escolha  = int(input(f"Escolha quem atacar! digite o numero correspondente.\n")) - 1
+
+
+        alvo = inimigos[alvo_escolha ]
+        dano = ataque_player(player[0],alvo)
+        alvo.hp -= dano
+        player[0].curou_nesta_rodada = False
+
+    return alvo, dano    
+
 def atacar(status, inimigos, ordemdeataque):
     if status == "ready" or status == "combate":
         turno = ordemdeataque[0]
@@ -123,100 +210,30 @@ def atacar(status, inimigos, ordemdeataque):
         status = "combate"
 
         if len(inimigos) > 0 and isinstance(turno, nStatus):
+            turno_montro(ordemdeataque)
 
-            custa_esquiva = 15
-            if player[0].stamina >= custa_esquiva:
-                lista_esquiva_valida = ["sim","nao","não","esquivar","esquiva","s","e","n","d","desviar"]
-                ask_esquiva = validar(f"\nO {turno.name} irá te atacar! gostaria de [blue]desviar?[/]", lista_esquiva_valida )
+            if player[0].hp > 0:
 
-                if ask_esquiva.startswith(("s","e","d")) :
-                    if player[0].stamina < custa_esquiva:
-                        print(f"\nestamina necessaria: {custa_esquiva} estamina disponivel: {player[0].stamina}")
-                    
-                    else:
-                        player[0].stamina -= custa_esquiva
-                        print(f"Você gastou [blue]15 de estamina [/]e esta com [blue]{player[0].stamina}")
-                        ordemdeataque.append(ordemdeataque.pop(0))    
+                print(detail(player[0]))
+                ordemdeataque.append(ordemdeataque.pop(0))
+                time.sleep(3)
 
-                        if player[0].stamina <0:
-                            player[0].stamina = 0 
+            elif player[0].hp <= 0:
+                print(f"\nO monstro {turno.name} te matou com {dano} de dano!\n")
+                status = "game over"
+                end(status)
+                return
 
-            dano = npc_ataque(turno,player[0])
-
-            if player[0].stamina < custa_esquiva :
-                print(f"estamina abaixo de 15! [red bold]esquiva indisponivel dano aumentado.[/]")
-                ask_esquiva = "nao"
-                dano = int(dano * 1.80)
-
-                
-                
-            if  ask_esquiva == "não" or ask_esquiva == "nao":
-
-                print(f"\nO monstro {turno.name} ira te atacar com: {dano} de dano \n"
-                      "Agora você tem\n")
-                    
-                player[0].hp -= dano
-                time.sleep(1.5)
-
-                if player[0].hp > 0:
-
-                    print(detail(player[0]))
-                    ordemdeataque.append(ordemdeataque.pop(0))
-                    time.sleep(3)
-
-                elif player[0].hp <= 0:
-                    print(f"\nO monstro {turno.name} te matou com {dano} de dano!\n")
-                    status = "game over"
-                    end(status)
-                    return
-
-
-                contador = 1
-                for cabacice in ordemdeataque:
-                    print(f"{contador} - {cabacice.name}(HP:{cabacice.hp})\n")
-                    contador += 1        
+            contador = 1
+            for cabacice in ordemdeataque:
+                print(f"{contador} - {cabacice.name}(HP:{cabacice.hp})\n")
+                contador += 1        
 
         elif len(inimigos) > 0 and isinstance(turno, pStatus):
-
-            ask = validar(("\nO que gostaria de fazer?\n [red]Cura[/] [blue]atacar[/]"), ["cura", "atacar"])
-        
-            if ask == "cura":
-                if player[0].curou_nesta_rodada :
-                    print(f"\nVocê já se curou nessa rodada!")
-                    ask = "atacar"
-
-                elif player[0].hp >= player[0].hpmax :
-                    print(f"\nVida ja está no maximo!")
-                    ordemdeataque.append(ordemdeataque.pop(0))
+            alvo, dano = turno_player(ordemdeataque,inimigos)
 
 
-                else:
-                    qtd_curadap = cura(player[0])
-                    print(f"\nVocê [red]curou {qtd_curadap} parabêns!")
-                    player[0].curou_nesta_rodada = True
-                    ordemdeataque.append(ordemdeataque.pop(0))
-
-
-            elif ask == "atacar":
-                print(f"\nLista de quem atacar!\n")
-                contador = 1
-                for cabacice in inimigos:
-                    if isinstance (cabacice,nStatus):
-                        print(f"{contador} - {cabacice.name}(HP:{cabacice.hp})\n")
-                        contador += 1
-                time.sleep(0.5)
-                alvo_escolha = int(input(f"Escolha quem atacar! digite o numero correspondente.\n")) - 1
-
-                while alvo_escolha  >= len(inimigos) or alvo_escolha  < 0:
-                    print("Digite um numero valido por favor!\n")
-                    alvo_escolha  = int(input(f"Escolha quem atacar! digite o numero correspondente.\n")) - 1
-
-
-                alvo = inimigos[alvo_escolha ]
-                dano = ataque_player(player[0],alvo)
-                alvo.hp -= dano
-                player[0].curou_nesta_rodada = False
-
+            if alvo is not None:
                 if alvo.hp > 0:
 
                     print(f"O {alvo.name} sofreu {dano} de dano!\n"
@@ -228,14 +245,13 @@ def atacar(status, inimigos, ordemdeataque):
                     print(f"O {alvo.name} morreu!\n")
                     ordemdeataque.remove(alvo)
                     inimigos.remove(alvo)
-        
+            
         if len(inimigos) > 0:
             atacar(status,inimigos,ordemdeataque)
 
         elif len(inimigos) == 0:
             print("FIM DE JOGO GANHOU")
             return novo_jogo()
-
 
 
 start()

@@ -22,69 +22,57 @@ class NPCamigavel(nStatus):
         self.hotil = False
         self.dialogo = True
 
+monster_database = {
+    "Goblin":   {"hp_mult":  1.2, "stamina_mult": 1.3, "dano_mult":  0.8},
+    "Orc":   {"hp_mult":  2, "stamina_mult": 0.5, "dano_mult":  2},
+    "Wolf":   {"hp_mult":  0.8, "stamina_mult": 4, "dano_mult":  1.5},
+    "Demon":   {"hp_mult":  15, "stamina_mult": 25, "dano_mult":  3},
+    "Fallen Angel":   {"hp_mult":  130, "stamina_mult": 1160, "dano_mult":  6},
+
+    }
+
 def gerar_monstro():
     hp = randint(10,50)
     dano = randint(3,10)
     stamina = randint(10,120)
 
     tipo_npc = choices(["Goblin", "Orc", "Wolf", "Demon", "Fallen Angel"], weights=[40, 20, 30,9,1],k=1)[0]
+
+    rules = monster_database.get(tipo_npc)
+
+    final_damage = dano * rules["dano_mult"]
+    final_hp = hp * rules["hp_mult"]
+    final_stamina = stamina * rules["stamina_mult"] 
+
     name = f"{tipo_npc} {choice(["Avançado", "Novo", "Batedor"])}"
-    if tipo_npc == "Goblin":
-        stamina /= 1.3
-        hp *= 1.02
-        dano /=1.20
-    if tipo_npc == "Orc":
-        hp *=2
-        stamina /= 2
-        dano *= 2
-    if tipo_npc == "Wolf":
-        hp /= 1.2
-        stamina *= 4
-        dano *= 1.5
-    if tipo_npc == "Demon":
-        hp *= 15
-        stamina *= 25
-        dano *=3
-    if tipo_npc == "Fallen Angel":
-        hp *= 130
-        stamina *= 1160
-        dano = randint(10,15)
-        dano *=5
-    return nStatus( int(hp), int(stamina), name, tipo_npc, int(dano))
+
+
+
+    return nStatus( int(final_hp), int(final_stamina), name, tipo_npc, int(final_damage))
 
 def npc_ataque(self, alvo):
     tipo_npc = self.tipo_npc
     dano = self.dano
-    tipo_dano = ""
 
-    if tipo_npc == "Goblin":
-        tipo_dano = choices(["normal", "critico"], weights=[ 90,10],k=1)[0]
-        if tipo_dano == "critico":
-            dano = int(dano * 1.5)
+    table_monster = {
+        "Goblin":   {"chance_critico": 31, "multiplicador": 1.5},
+        "Orc":    {"chance_critico": 15, "multiplicador": 2},
+        "Wolf":     {"chance_critico": 50, "multiplicador": 1.3},
+        "Demon":    {"chance_critico": 43, "multiplicador": 3},
+        "Fallen Angel":     {"chance_critico": 70, "multiplicador": 6}
+    }
 
-    elif tipo_npc == "Orc":
-        tipo_dano = choices(["normal", "critico"], weights=[ 90,10],k=1)[0]
-        if tipo_dano == "critico":
-            dano = int(dano * 2)
+    regras = table_monster.get(tipo_npc, {"chance_critico":10, "multiplicador": 2})
 
-    elif tipo_npc == "Wolf":
-        tipo_dano = choices(["normal", "critico"], weights=[ 90,10],k=1)[0]
-        if tipo_dano == "critico":
-            dano = int(dano * 1.3)
+    chance_normal = 100 - regras["chance_critico"]
+    critical_chance = regras ["chance_critico"]
+    multipliyer = regras["multiplicador"]
 
+    tipo_dano = choices(["normal","critico"],weights=[chance_normal,critical_chance],k=1)[0]
 
-    elif tipo_npc == "Demon":
-        tipo_dano = choices(["normal", "critico"], weights=[ 90,10],k=1)[0]
-        if tipo_dano == "critico":
-            dano = int(dano * 3)
-                
-    elif tipo_npc == "Fallen Angel":
-        tipo_dano = choices(["normal", "critico"], weights=[ 90,10],k=1)[0]
-        if tipo_dano == "critico":
-            dano = int(dano * 6)
 
     if tipo_dano == "critico":
         print(f"[red]CRITICO!\n")
-
+        dano = int(dano * multipliyer)
 
     return dano 

@@ -13,9 +13,9 @@ class pStatus():
         
 def gerar_player():
         name = input("Nome por favor!\n")
-        hp = randint(50,100)
+        hp = randint(90,180)
         stamina = randint(10,120)
-        dano = randint(8,20)
+        dano = randint(10,30)
         return pStatus(hp,stamina, name, dano)
 
 def ataque_player(self, alvo):
@@ -29,7 +29,7 @@ def ataque_player(self, alvo):
      return dano
 
 def cura(self):
-        pocao = randint(10,30)
+        pocao = randint(20,50)
         self.hp += pocao
         if self.hp >= self.hpmax:
               cura_valida = pocao - (self.hp - self.hpmax)

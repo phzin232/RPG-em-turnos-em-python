@@ -4,7 +4,6 @@ venv/
 
 # Arquivos de cache do Python (gerados automaticamente)
 __pycache__/
-Game/characters/__pycache__
 *.pyc
 
 # Configurações do VS Code
