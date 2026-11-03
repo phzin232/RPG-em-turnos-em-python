@@ -10,9 +10,6 @@ install()
 player = []
 npc = []
 
-acoes = {
-        "atacar": atacar
-    }
 
 def validar(pergunta, lista):
     print(f"{pergunta}")
@@ -252,6 +249,12 @@ def atacar(status, inimigos, ordemdeataque):
         elif len(inimigos) == 0:
             print("FIM DE JOGO GANHOU")
             return novo_jogo()
+
+
+acoes = {
+        "atacar": atacar,
+        "curar" : player_cura
+    }
 
 
 start()
