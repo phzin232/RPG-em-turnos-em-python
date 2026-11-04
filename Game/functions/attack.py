@@ -1,6 +1,7 @@
 import time
 from characters.player import cura, ataque_player
 from characters.npc import nStatus
+from rich import print
 
 
 

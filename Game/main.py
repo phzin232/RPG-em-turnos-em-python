@@ -1,6 +1,7 @@
 from characters.npc import nStatus, gerar_monstro, npc_ataque
-from characters.player import pStatus, gerar_player, ataque_player, cura
-from attack import player_cura, player_ataque
+from characters.player import pStatus, gerar_player
+from functions.attack import player_cura, player_ataque
+from functions.generics import validar_acao, validar, gerar_horda
 from rich import print, inspect
 from rich.traceback import install
 from random import randint, shuffle
@@ -12,29 +13,6 @@ player = []
 npc = []
 
 
-def validar(pergunta, lista):
-    print(f"{pergunta}")
-    text_a_validar = input(" ").strip().lower()
-
-    while text_a_validar  not in lista:
-        text_a_validar = input("Digite novamente por gentileza!\n").strip().lower()
-    return text_a_validar
-
-def validar_acao(pergunta, dict_a_ser_verificada):
-    print(f"{pergunta}")
-
-    while True:
-        ask = input(f" ").strip().lower()
-        funcao_escolhida = None
-
-        for letras in dict_a_ser_verificada.keys():
-            if letras.startswith(ask):
-                funcao_escolhida = dict_a_ser_verificada[letras]
-                break
-        if funcao_escolhida:
-            return funcao_escolhida
-        else:
-            print(f"Função não localizada tente novamente!")
 
 def detail(personagem):
     conteudo = (
@@ -62,7 +40,7 @@ def start():
         print(detail(playerst))
         game_started = True
         time.sleep(3)
-        gerar_horda(status, game_started)
+        gerar_horda(status, game_started, npc, player, atacar)
 
     elif ask in ["mais", "+", "dois"]:
         monterst = gerar_monstro()
@@ -89,52 +67,6 @@ def end(status):
         npc.clear()
         novo_jogo()
 
-def gerar_horda(status,game_started):
-    if game_started == True:
-       
-        status = "preparing"
-        global quantia_montro 
-        quantia_montro = randint(1,1)
-        while quantia_montro > 0:
-            monterst = gerar_monstro()
-            npc.append(monterst)
-            quantia_montro -= 1    
-       
-        quantia_montro = len(npc)
-        ordem(status)
-    else:
-        print("Valide o codigo primeiro. Erro fatal.")
-
-def ordem(status):
-    ordemataque = []
-    if status == "preparing":
-        if quantia_montro >=1:
-                shuffle(npc)
-        ordemataque.extend(player)
-        ordemataque.extend(npc)
-        shuffle(ordemataque)
-
-        status = "ready"
-        numerar_inimigos(status, ordemataque)
-
-def numerar_inimigos(status, ordemataque):
-    contador = 1
-    inimigos = []
-    if status == "ready":
-        print(f"A ordem do combate é:\n")
-        for cabacice in ordemataque:
-                print(f"{contador} - {cabacice.name}(HP:{cabacice.hp})")
-                contador += 1
-        time.sleep(3)
-        print(f"\nJá a de inimigos sem você é:")
-        contador = 1
-        for cabacice in ordemataque:
-            if isinstance(cabacice, nStatus):
-                print(f"{contador} - {cabacice.name}(HP:{cabacice.hp})")
-                contador += 1
-                inimigos.append(cabacice)
-        atacar(status, inimigos, ordemataque)
-
 def turno_montro(ordemdeataque):
     turno = ordemdeataque[0]
     custa_esquiva = 15
@@ -148,14 +80,15 @@ def turno_montro(ordemdeataque):
 
             else:
                 player[0].stamina -= custa_esquiva
-                print(f"Você gastou [blue]15 de estamina [/]e esta com [blue]{player[0].stamina}")  
+                print(f"Você gastou [blue]15 de estamina [/]e esta com [blue]{player[0].stamina}") 
+                player[0].esquivou = True 
 
                 if player[0].stamina < 0:
                     player[0].stamina = 0 
 
                 return
 
-    dano = npc_ataque(turno,player[0])
+    dano = npc_ataque(turno, player)
 
     if player[0].stamina < custa_esquiva :
         print(f"estamina abaixo de 15! [red bold]esquiva indisponivel dano aumentado.[/]")
@@ -169,6 +102,10 @@ def turno_montro(ordemdeataque):
                 "Agora você tem\n")
             
         player[0].hp -= dano
+        player[0].esquivou = False
+
+
+
         time.sleep(1.5)
     
 def turno_player(ordemdeataque,inimigos):
@@ -178,6 +115,7 @@ def turno_player(ordemdeataque,inimigos):
     funcao_escolhida = validar_acao("\nO que gostaria de fazer?\n [red]Cura[/] [blue]atacar[/]",acoes)
 
     alvo, dano = funcao_escolhida(ordemdeataque, inimigos, player)
+    player[0].esquivou = False
 
     return alvo, dano
 

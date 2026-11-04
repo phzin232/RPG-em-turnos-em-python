@@ -50,16 +50,16 @@ def gerar_monstro():
 
     return nStatus( int(final_hp), int(final_stamina), name, tipo_npc, int(final_damage))
 
-def npc_ataque(self, alvo):
+def npc_ataque(self, player):
     tipo_npc = self.tipo_npc
     dano = self.dano
 
     table_monster = {
-        "Goblin":   {"chance_critico": 31, "multiplicador": 1.5},
-        "Orc":    {"chance_critico": 15, "multiplicador": 2},
-        "Wolf":     {"chance_critico": 50, "multiplicador": 1.3},
-        "Demon":    {"chance_critico": 43, "multiplicador": 3},
-        "Fallen Angel":     {"chance_critico": 70, "multiplicador": 6}
+        "Goblin":   {"chance_critico": 100, "multiplicador": 1.5},
+        "Orc":    {"chance_critico": 99, "multiplicador": 2},
+        "Wolf":     {"chance_critico": 98, "multiplicador": 1.3},
+        "Demon":    {"chance_critico": 97, "multiplicador": 3},
+        "Fallen Angel":     {"chance_critico": 96, "multiplicador": 6}
     }
 
     regras = table_monster.get(tipo_npc, {"chance_critico":10, "multiplicador": 2})
@@ -70,9 +70,8 @@ def npc_ataque(self, alvo):
 
     tipo_dano = choices(["normal","critico"],weights=[chance_normal,critical_chance],k=1)[0]
 
-
-    if tipo_dano == "critico":
-        print(f"[red]CRITICO!\n")
+    if tipo_dano == "critico" and player[0].esquivou == False:
+        print(f"[yellow]CRITÍCO!")
         dano = int(dano * multipliyer)
 
-    return dano 
+    return dano
