@@ -14,7 +14,7 @@ class pStatus():
         
 def gerar_player():
         name = input("Nome por favor!\n")
-        hp = randint(900,1800)
+        hp = randint(90,180)
         stamina = randint(60,120)
         dano = randint(10,30)
         return pStatus(hp,stamina, name, dano)

@@ -23,17 +23,17 @@ class NPCamigavel(nStatus):
         self.dialogo = True
 
 monster_database = {
-    "Goblin":   {"hp_mult":  1.2, "stamina_mult": 1.3, "dano_mult":  0.8},
-    "Orc":   {"hp_mult":  2, "stamina_mult": 0.5, "dano_mult":  2},
-    "Wolf":   {"hp_mult":  0.8, "stamina_mult": 4, "dano_mult":  1.5},
-    "Demon":   {"hp_mult":  15, "stamina_mult": 25, "dano_mult":  3},
-    "Fallen Angel":   {"hp_mult":  130, "stamina_mult": 1160, "dano_mult":  6},
+    "Goblin":   {"hp_mult":  1.2, "stamina_mult": 1.3, "dano_mult": 1.8},
+    "Orc":   {"hp_mult":  2, "stamina_mult": 0.5, "dano_mult":  3},
+    "Wolf":   {"hp_mult":  0.8, "stamina_mult": 4, "dano_mult":  2.5},
+    "Demon":   {"hp_mult":  15, "stamina_mult": 25, "dano_mult":  5},
+    "Fallen Angel":   {"hp_mult":  30, "stamina_mult": 1160, "dano_mult":  7},
 
     }
 
 def gerar_monstro():
-    hp = randint(100,500)
-    dano = randint(3,10)
+    hp = randint(50,100)
+    dano = randint(6,20)
     stamina = randint(10,120)
 
     tipo_npc = choices(["Goblin", "Orc", "Wolf", "Demon", "Fallen Angel"], weights=[40, 20, 30,9,1],k=1)[0]
