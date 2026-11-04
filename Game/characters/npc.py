@@ -32,7 +32,7 @@ monster_database = {
     }
 
 def gerar_monstro():
-    hp = randint(10,50)
+    hp = randint(100,500)
     dano = randint(3,10)
     stamina = randint(10,120)
 
