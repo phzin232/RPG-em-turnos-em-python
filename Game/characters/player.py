@@ -49,9 +49,3 @@ def cura(self):
             cura_valida = pocao
 
         return cura_valida
-        
-        
-
-
-
-

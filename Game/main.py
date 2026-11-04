@@ -8,6 +8,7 @@ from random import randint, shuffle
 from rich.panel import Panel
 import time
 
+
 install()
 player = []
 npc = []
