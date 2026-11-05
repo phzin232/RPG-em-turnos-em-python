@@ -113,7 +113,7 @@ def turno_player(ordemdeataque,inimigos):
 
     ordemdeataque[0]
 
-    funcao_escolhida = validar_acao("\nO que gostaria de fazer?\n [red]Cura[/] [blue]atacar[/]",acoes)
+    funcao_escolhida = validar_acao("\nO que gostaria de fazer?\n [red]Cura[/] [blue]atacar[/]",acoes_plataque)
 
     alvo, dano = funcao_escolhida(ordemdeataque, inimigos, player)
     player[0].esquivou = False
@@ -169,7 +169,7 @@ def atacar(status, inimigos, ordemdeataque):
             print("FIM DE JOGO GANHOU")
             return novo_jogo()
 
-acoes = {
+acoes_plataque = {
     "atacar": player_ataque,
     "cura" : player_cura
 }
