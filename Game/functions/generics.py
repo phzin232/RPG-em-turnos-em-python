@@ -1,7 +1,7 @@
 from rich import print
 import time
 from random import randint, shuffle
-from characters.npc import gerar_monstro, nStatus
+from Game.characters import npc
 
 
 
@@ -29,29 +29,29 @@ def validar_acao(pergunta, dict_a_ser_verificada):
         else:
             print(f"Função não localizada tente novamente!")
 
-def gerar_horda(status,game_started, npc, player, atacar):
+def gerar_horda(status,game_started, npc_list, player, atacar):
     if game_started == True:
        
         status = "preparing"
         global quantia_montro 
         quantia_montro = randint(1,10)
         while quantia_montro > 0:
-            monterst = gerar_monstro()
-            npc.append(monterst)
+            monterst = npc.gerar_monstro()
+            npc_list.append(monterst)
             quantia_montro -= 1    
        
-        quantia_montro = len(npc)
-        ordem(status,player, npc, atacar)
+        quantia_montro = len(npc_list)
+        ordem(status,player, npc_list, atacar)
     else:
         print("Valide o codigo primeiro. Erro fatal.")
 
-def ordem(status, player, npc, atacar):
+def ordem(status, player_list,npc_list, atacar):
     ordemataque = []
     if status == "preparing":
         if quantia_montro >=1:
-                shuffle(npc)
-        ordemataque.extend(player)
-        ordemataque.extend(npc)
+                shuffle(npc_list)
+        ordemataque.extend(player_list)
+        ordemataque.extend(npc_list)
         shuffle(ordemataque)
 
         status = "ready"
@@ -69,7 +69,7 @@ def numerar_inimigos(status, ordemataque, atacar):
         print(f"\nJá a de inimigos sem você é:")
         contador = 1
         for cabacice in ordemataque:
-            if isinstance(cabacice, nStatus):
+            if isinstance(cabacice, npc.nStatus):
                 print(f"{contador} - {cabacice.name}(HP:{cabacice.hp})")
                 contador += 1
                 inimigos.append(cabacice)

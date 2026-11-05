@@ -9,6 +9,7 @@ class pStatus():
         self.esquivou = False
         self.stamina = stamina
         self.staminamax = stamina
+        
         self.name = name
         self.dano = dano
         

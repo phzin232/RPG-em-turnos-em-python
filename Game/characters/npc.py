@@ -50,7 +50,7 @@ def gerar_monstro():
 
     return nStatus( int(final_hp), int(final_stamina), name, tipo_npc, int(final_damage))
 
-def npc_ataque(self, player):
+def npc_ataque(self, player_list):
     tipo_npc = self.tipo_npc
     dano = self.dano
 
@@ -70,7 +70,7 @@ def npc_ataque(self, player):
 
     tipo_dano = choices(["normal","critico"],weights=[chance_normal,critical_chance],k=1)[0]
 
-    if tipo_dano == "critico" and player[0].esquivou == False:
+    if tipo_dano == "critico" and player_list.esquivou == False:
         print(f"[yellow]CRITÍCO!")
         dano = int(dano * multipliyer)
 

@@ -1,31 +1,31 @@
 import time
-from characters.player import cura, ataque_player
-from characters.npc import nStatus
+from Game.characters import player
+from Game.characters import npc
 from rich import print
 
 
 
-def player_cura(ordemdeataque, inimigos, player):
-    if player[0].curou_nesta_rodada :
+def player_cura(ordemdeataque, inimigos, player_list):
+    if  player_list.curou_nesta_rodada :
         print(f"\nVocê já se curou nessa rodada!")
         ordemdeataque.append(ordemdeataque.pop(0))
 
-    elif player[0].hp >= player[0].hpmax :
+    elif  player_list.hp >=  player_list[0].hpmax :
         print(f"\nVida ja está no maximo!")
         ordemdeataque.append(ordemdeataque.pop(0))
 
     else:
-        qtd_curadap = cura(player[0])
+        qtd_curadap = player.cura( player_list[0])
         print(f"\nVocê [red]curou {qtd_curadap} parabêns!")
 
         
     return None, 0
 
-def player_ataque(ordemdeataque, inimigos, player):
+def player_ataque(ordemdeataque, inimigos,  player_list):
         print(f"\nLista de quem atacar!\n")
         contador = 1
         for cabacice in inimigos:
-            if isinstance (cabacice,nStatus):
+            if isinstance (cabacice,npc.nStatus):
                 print(f"{contador} - {cabacice.name}(HP:{cabacice.hp})\n")
                 contador += 1
         time.sleep(0.5)
@@ -37,8 +37,8 @@ def player_ataque(ordemdeataque, inimigos, player):
 
 
         alvo = inimigos[alvo_escolha ]
-        dano = ataque_player(player[0], alvo)
+        dano = player.ataque_player(player_list, alvo)
         alvo.hp -= dano
-        player[0].curou_nesta_rodada = False
+        player_list.curou_nesta_rodada = False
 
         return alvo, dano 
