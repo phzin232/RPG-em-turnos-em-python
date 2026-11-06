@@ -1,28 +1,17 @@
 import customtkinter as ctk
-from ..characters import player
-from ..functions import attack
-from ..functions import  generics
-from rich.traceback import install
+from ...characters import player
+from ...functions import generics 
 
 
-install()
-player_list = []
-npc_list = []
+class Criação(ctk.CTkframe):
+    def __init__(self, master, player_list, npc_list):
+        super().__init__(master)
 
+        self.master = master
+        self.player_list = player_list
+        self.npc_list = npc_list
 
-class RPGApp(ctk.CTk):
-    def __init__(self):
-        super().__init__()
-        self.geometry("800x600")
-        self.title("teste")
-
-        self.Start_game()
-
-
-    def clear_windo(self):
-
-        for widget in self.winfo_children():
-            widget.destroy()
+        self.desenhat_tela()
 
     def Start_game(self):
         self.clear_windo()
@@ -58,23 +47,3 @@ class RPGApp(ctk.CTk):
         player_list.append(playerst)
         self.after(2000,self.iniciar_combate)
         
-    def iniciar_combate(self):
-        self.clear_windo()
-
-        self.c_text = ctk.CTkLabel(self,text="Um Combate iniciara!",font=("Arial", 40, "bold"))
-        self.c_text.pack(pady=20)
-
-        horda =  generics.gerar_horda("ready", True, npc_list, player_list,)
-        print(horda)
-
-
-
-
-
-
-        
-
-
-
-
-

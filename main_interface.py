@@ -1,4 +1,4 @@
-from Game.interface.app import RPGApp
+from Game.app import RPGApp
 from rich.traceback import install
 
 install()
