@@ -52,14 +52,21 @@ def gerar_monstro():
 
 def npc_ataque(self, player_list):
     tipo_npc = self.tipo_npc
+
     dano = self.dano
 
+    danomin = int(self.dano * 0.8)
+    danomax = int(self.dano * 2)
+
+
+    dano = randint(danomin, danomax)
+
     table_monster = {
-        "Goblin":   {"chance_critico": 100, "multiplicador": 1.5},
-        "Orc":    {"chance_critico": 99, "multiplicador": 2},
-        "Wolf":     {"chance_critico": 98, "multiplicador": 1.3},
-        "Demon":    {"chance_critico": 97, "multiplicador": 3},
-        "Fallen Angel":     {"chance_critico": 96, "multiplicador": 6}
+        "Goblin":   {"chance_critico": 40, "multiplicador": 1.5},
+        "Orc":    {"chance_critico": 60, "multiplicador": 2},
+        "Wolf":     {"chance_critico": 70, "multiplicador": 1.3},
+        "Demon":    {"chance_critico": 80, "multiplicador": 3},
+        "Fallen Angel":     {"chance_critico": 83, "multiplicador": 6}
     }
 
     regras = table_monster.get(tipo_npc, {"chance_critico":10, "multiplicador": 2})

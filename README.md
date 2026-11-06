@@ -4,7 +4,7 @@ Um jogo de RPG de turnos feito no terminal usando Programação Orientada a Obje
 
 ##  Funcionalidades Atuais
 - **Criação de Personagem:** O jogador pode criar seu próprio herói.
-- **Sistema de Combate por Turnos:** Iniciativa aleatória (quem ataca primeiro).
+- **Sistema de Combate por Turnos:** Iniciativa aleatória (quem ataca primeiro não necessariamente sera o player).
 - **Inimigos Balanceados:** Goblins, Orcs, Lobos, Demônios e Fallen Angels, cada um com status e danos diferentes.
 - **Sistema de Crítico:** Chance de dar dano extra baseado no tipo de personagem.
 - **Interface no Terminal:** HUD bonito e colorido usando a biblioteca `Rich`.

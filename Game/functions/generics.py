@@ -29,12 +29,12 @@ def validar_acao(pergunta, dict_a_ser_verificada):
         else:
             print(f"Função não localizada tente novamente!")
 
-def gerar_horda(status,game_started, npc_list, player, atacar):
+def gerar_horda(status, game_started, npc_list, player, atacar):
     if game_started == True:
        
         status = "preparing"
         global quantia_montro 
-        quantia_montro = randint(1,10)
+        quantia_montro = randint(3,8)
         while quantia_montro > 0:
             monterst = npc.gerar_monstro()
             npc_list.append(monterst)

@@ -2,7 +2,6 @@ from Game.characters import npc
 from Game.characters import player
 from Game.functions import attack
 from Game.functions import  generics
-from Game.interface import RPGApp
 from rich import print, inspect
 from rich.traceback import install
 from random import randint, shuffle
@@ -31,12 +30,13 @@ def detail(personagem):
 def start():
     game_started = False
     status = "waiting"
-    listvalidar = ["player","um","mais","+","dois"]
-    ask = generics.validar("Gostaria de criar um Player ou mais de um?\n",listvalidar )
+    listvalidar = ["sim","s"]
+    ask = generics.validar("Gostaria de iniciar?\n",listvalidar )
     
     
-    if ask in ["player_list", "um"]:
-        playerst = player.gerar_player()
+    if ask in ["s", "sim"]:
+        name = input("Nome por favor!\n")
+        playerst = player.gerar_player(name)
         player_list.append(playerst)
         print(detail(playerst))
         game_started = True
@@ -174,5 +174,4 @@ acoes_plataque = {
     "cura" : attack.player_cura
 }
 
-
-RPGApp.Start_game(RPGApp, start())
+start()
