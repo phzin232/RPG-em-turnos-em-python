@@ -1,10 +1,10 @@
-# Ambiente virtual do Python
+
 .venv/
 venv/
 
-# Arquivos de cache do Python (gerados automaticamente)
+
 __pycache__/
 *.pyc
 
-# Configurações do VS Code
+
 .vscode/
