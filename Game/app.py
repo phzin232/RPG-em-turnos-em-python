@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from interface.actions_scenes import tela_combate
+
 from Game.interface.Menu_scene import tela_criacao
 
 
@@ -18,8 +18,8 @@ class RPGApp(ctk.CTk):
         self.player_list = []
         self.npc_list = []
 
+        sel
         self.tela_criação = tela_criacao(self, self.player_list, self.npc_list)
-        self.tela_combate = tela_combate(self)
 
         self.mostrar_tela(self.tela_criação)
 
@@ -27,7 +27,7 @@ class RPGApp(ctk.CTk):
         self.tela_criação.pack_forget()
         self.tela_combate.pack_forget()
 
-        tela_am
+        tela.pack(fill="both", expand=True)
     def iniciar_combate(self):
         self.clear_windo()
 

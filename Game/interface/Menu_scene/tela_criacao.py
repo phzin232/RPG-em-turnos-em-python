@@ -3,7 +3,7 @@ from ...characters import player
 from ...functions import generics 
 
 
-class Criação(ctk.CTkframe):
+class Criação(ctk.CTkFrame):
     def __init__(self, master, player_list, npc_list):
         super().__init__(master)
 
@@ -44,6 +44,6 @@ class Criação(ctk.CTkframe):
         welcome = ctk.CTkLabel(self, text=f"então seu nome sera {nome}",font=("Arial", 30, "bold"))
         welcome.pack(pady = 50)
         playerst = player.gerar_player(nome)
-        player_list.append(playerst)
+        self.player_list.append(playerst)
         self.after(2000,self.iniciar_combate)
         
