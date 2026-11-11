@@ -8,16 +8,15 @@ from rich import print
 def player_cura(ordemdeataque, inimigos, player_list):
     if  player_list.curou_nesta_rodada :
         print(f"\nVocê já se curou nessa rodada!")
-        ordemdeataque.append(ordemdeataque.pop(0))
 
-    elif  player_list.hp >=  player_list[0].hpmax :
+
+    elif  player_list.hp >=  player_list.hpmax :
         print(f"\nVida ja está no maximo!")
         ordemdeataque.append(ordemdeataque.pop(0))
-
     else:
-        qtd_curadap = player.cura( player_list[0])
+        qtd_curadap = player.cura( player_list)
         print(f"\nVocê [red]curou {qtd_curadap} parabêns!")
-
+        ordemdeataque.append(ordemdeataque.pop(0))
         
     return None, 0
 
@@ -33,10 +32,10 @@ def player_ataque(ordemdeataque, inimigos,  player_list):
         while True:
              try:
                  alvo_escolha = int(input(f"Escolha quem atacar! digite o numero correspondente.\n")) - 1
-                 if alvo_escolha  >= len(inimigos) or alvo_escolha  < 0:
+                 if alvo_escolha  <= len(inimigos) or alvo_escolha  < 0:
                     break
                  else:
-                      print("Digite um numero valido por favor!\n")
+                      alvo_escolha = input(f"Digite um numero valido por favor!\n")
              except ValueError:
                  print("Tente noovmante!")
 

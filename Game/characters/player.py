@@ -40,7 +40,7 @@ def ataque_player(self, alvo):
      return dano
 
 def cura(self):
-        pocao = randint(20,50)
+        pocao = randint(30,80)
         self.hp += pocao
         if self.hp >= self.hpmax:
               cura_valida = pocao - (self.hp - self.hpmax)

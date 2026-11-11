@@ -34,7 +34,7 @@ def gerar_horda(status, game_started, npc_list, player, atacar):
        
         status = "preparing"
         global quantia_montro 
-        quantia_montro = randint(3,8)
+        quantia_montro = randint(1,1)
         while quantia_montro > 0:
             monterst = npc.gerar_monstro()
             npc_list.append(monterst)
@@ -50,9 +50,8 @@ def ordem(status, player_list,npc_list, atacar):
     if status == "preparing":
         if quantia_montro >=1:
                 shuffle(npc_list)
-        ordemataque.extend(player_list)
+        ordemataque.extend(player_list)               
         ordemataque.extend(npc_list)
-        shuffle(ordemataque)
 
         status = "ready"
         numerar_inimigos(status, ordemataque, atacar)
