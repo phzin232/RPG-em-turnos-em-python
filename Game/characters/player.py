@@ -31,7 +31,7 @@ def ataque_player(self, alvo):
      chance_critico = 10 + bonus
      chance_normal = int(100 - chance_critico)
 
-     tipo_dano = choices(["normal", "critico"], weights=[ chance_critico, chance_normal],k=1)[0]
+     tipo_dano = choices(["normal", "critico"], weights=[ chance_normal, chance_critico],k=1)[0]
 
      if tipo_dano == "critico":
           dano *= 3
