@@ -29,12 +29,16 @@ def player_ataque(ordemdeataque, inimigos,  player_list):
                 print(f"{contador} - {cabacice.name}(HP:{cabacice.hp})\n")
                 contador += 1
         time.sleep(0.5)
-        alvo_escolha = int(input(f"Escolha quem atacar! digite o numero correspondente.\n")) - 1
 
-        while alvo_escolha  >= len(inimigos) or alvo_escolha  < 0:
-            print("Digite um numero valido por favor!\n")
-            alvo_escolha  = int(input(f"Escolha quem atacar! digite o numero correspondente.\n")) - 1
-
+        while True:
+             try:
+                 alvo_escolha = int(input(f"Escolha quem atacar! digite o numero correspondente.\n")) - 1
+                 if alvo_escolha  >= len(inimigos) or alvo_escolha  < 0:
+                    break
+                 else:
+                      print("Digite um numero valido por favor!\n")
+             except ValueError:
+                 print("Tente noovmante!")
 
         alvo = inimigos[alvo_escolha ]
         dano = player.ataque_player(player_list, alvo)
