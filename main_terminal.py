@@ -4,7 +4,7 @@ from Game.functions import attack
 from Game.functions import  generics
 from rich import print, inspect
 from rich.traceback import install
-from random import randint, shuffle
+from random import choices
 from rich.panel import Panel
 import time
 
@@ -27,12 +27,11 @@ def detail(personagem):
                  border_style="red"
                  )
 
-def start():
+def start(buff):
     game_started = False
     status = "waiting"
     listvalidar = ["sim","s"]
     ask = generics.validar("Gostaria de iniciar?\n",listvalidar )
-    
     
     if ask in ["s", "sim"]:
         name = input("Nome por favor!\n")
@@ -41,7 +40,7 @@ def start():
         print(detail(playerst))
         game_started = True
         time.sleep(3)
-        generics.gerar_horda(status, game_started, npc_list, player_list, atacar)
+        generics.gerar_horda(status, game_started, npc_list, player_list, atacar,buff)
 
     elif ask in ["mais", "+", "dois"]:
         monterst = npc.gerar_monstro()
@@ -71,6 +70,7 @@ def end(status):
 def turno_montro(ordemdeataque):
     turno = ordemdeataque[0]
     custa_esquiva = 15
+    
     if player_list[0].stamina >= custa_esquiva:
         lista_esquiva_valida = ["sim","nao","não","esquivar","esquiva","s","e","n","d","desviar"]
         ask_esquiva = generics.validar(f"\nO {turno.name} irá te atacar! gostaria de [blue]desviar?[/]", lista_esquiva_valida )
@@ -166,12 +166,39 @@ def atacar(status, inimigos, ordemdeataque):
             atacar(status,inimigos,ordemdeataque)
 
         elif len(inimigos) == 0:
-            print("FIM DE JOGO GANHOU")
-            return novo_jogo()
+            print("Você Ganhou essa rodada!")
+            listvalidos = ["s", "sim"," n", "não"]
+            ask = generics.validar(f"gostaria de continuar? uma nova horda sera gerada!\n"
+                             "e você ganhara buffs!",listvalidos)
+            if ask.startswith("s"):
+                progresso(status)
+            elif ask.startswith("n"):
+                return novo_jogo()
+
+def progresso(status):
+        buffplayer = choices([1.2, 2], k=1)[0]
+        buffenemie = choices([1.5, 3],k=1)[0]
+
+        player_list[0].hpmax = int(player_list[0].hpmax * buffplayer)
+        player_list[0].staminamax = int(player_list[0].staminamax * buffplayer)
+        player_list[0].dano = int(player_list[0].dano * buffplayer)
+
+        player_list[0].stamina = player_list[0].staminamax
+        qtd_curadap = player.cura(player_list[0]) = player.cura(player_list[0])
+        if  player_list.hp >=  player_list.hpmax :
+            print(f"\nVida ja está no maximo!")
+
+        qtd_curadap = player.cura( player_list)
+        print(f"\nVocê [red]foi curado em {qtd_curadap} parabêns!")
+
+
+        
+        generics.gerar_horda(status, True, npc_list, player_list, atacar,buffenemie)
+
 
 acoes_plataque = {
     "atacar": attack.player_ataque,
     "cura" : attack.player_cura
 }
 
-start()
+start(buff=0)
